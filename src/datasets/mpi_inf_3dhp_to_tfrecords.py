@@ -116,7 +116,7 @@ def add_to_tfrecord(im_path,
     """
     # Read image
     if not exists(im_path):
-        # print('!!--%s doesnt exist! Skipping..--!!' % im_path)
+        print('!!--%s doesnt exist! Skipping..--!!' % im_path)
         return False
     with tf.gfile.FastGFile(im_path, 'rb') as f:
         image_data = f.read()
