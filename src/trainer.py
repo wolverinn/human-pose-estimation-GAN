@@ -156,7 +156,7 @@ class HMRTrainer(object):
         gpu_options = tf.GPUOptions(allow_growth=True)
         self.sess_config = tf.ConfigProto(
             allow_soft_placement=True,
-            log_device_placement=True,
+            log_device_placement=False,
             gpu_options=gpu_options)
 
     def use_pretrained(self):
