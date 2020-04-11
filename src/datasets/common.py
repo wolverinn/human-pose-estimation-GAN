@@ -168,8 +168,11 @@ def convert_to_example_wmosh(image_data, image_path, height, width, label,
         label = label.T
     if label.shape[1] > 14:
         print('This shouldnt be happening')
-        import ipdb
-        ipdb.set_trace()
+        with open("hmrlog.txt", 'a') as f:
+            f.write("line 172 exit..!!\n")
+        exit(1)
+        # import ipdb
+        # ipdb.set_trace()
     if pose is None:
         has_3d = 0
         # Use -1 to save.

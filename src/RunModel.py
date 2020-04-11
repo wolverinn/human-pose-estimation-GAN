@@ -28,8 +28,11 @@ class RunModel(object):
             )
         if not exists(config.load_path + '.index'):
             print('%s doesnt exist..' % config.load_path)
-            import ipdb
-            ipdb.set_trace()
+            with open("hmrlog.txt",'a') as f:
+                f.write("load_path doenst exist..!!\n")
+            exit(1)
+            # import ipdb
+            # ipdb.set_trace()
 
         # Data
         self.batch_size = config.batch_size

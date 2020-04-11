@@ -108,8 +108,11 @@ def get_encoder_fn_separate(model_type):
 
     if encoder_fn is None or threed_fn is None:
         print('Dont know what encoder to use for %s' % model_type)
-        import ipdb
-        ipdb.set_trace()
+        with open("hmrlog.txt", 'a') as f:
+            f.write("dont know what encoder to use..!!\n")
+        exit(1)
+        # import ipdb
+        # ipdb.set_trace()
 
     return encoder_fn, threed_fn
 

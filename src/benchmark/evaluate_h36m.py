@@ -393,7 +393,7 @@ def main(config):
             plt.imshow(good_img)
             plt.axis('off')
             plt.title('%d-th best, mean error %.2fmm' % (i, good_error))
-            import ipdb; ipdb.set_trace()
+            # import ipdb; ipdb.set_trace()
 
     
 

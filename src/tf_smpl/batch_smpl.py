@@ -82,8 +82,11 @@ class SMPL(object):
 
         if joint_type not in ['cocoplus', 'lsp']:
             print('BAD!! Unknown joint type: %s, it must be either "cocoplus" or "lsp"' % joint_type)
-            import ipdb
-            ipdb.set_trace()
+            with open("hmrlog.txt",'a') as f:
+                f.write("unknow joint type..!!\n")
+            exit(1)
+            # import ipdb
+            # ipdb.set_trace()
 
     def __call__(self, beta, theta, get_skin=False, name=None):
         """

@@ -130,8 +130,11 @@ class DataLoader(object):
         # Make sure we have dataset with 3D.
         if len(files_yes3d) == 0:
             print("Dont run this without any datasets with gt 3d")
-            import ipdb; ipdb.set_trace()
+            with open("hmrlog.txt",'a') as f:
+                f.write("dont run without any gt3d..!!\n")
             exit(1)
+            # import ipdb; ipdb.set_trace()
+            # exit(1)
 
         do_shuffle = True
 
@@ -209,8 +212,11 @@ class DataLoader(object):
 
         if len(files) == 0:
             print('Couldnt find any files!!')
-            import ipdb
-            ipdb.set_trace()
+            with open("hmrlog.txt",'a') as f:
+                f.write("counldnt find any files..!!\n")
+            exit(1)
+            # import ipdb
+            # ipdb.set_trace()
 
         return self.get_smpl_loader_from_files(files)
 

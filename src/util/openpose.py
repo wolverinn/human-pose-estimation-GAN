@@ -27,8 +27,11 @@ def get_bbox(json_path, vis_thr=0.2):
     person_height = np.linalg.norm(max_pt - min_pt)
     if person_height == 0:
         print('bad!')
-        import ipdb
-        ipdb.set_trace()
+        with open("hmrlog.txt", 'a') as f:
+            f.write("openpose bad..!!\n")
+        exit(1)
+        # import ipdb
+        # ipdb.set_trace()
     center = (min_pt + max_pt) / 2.
     scale = 150. / person_height
 

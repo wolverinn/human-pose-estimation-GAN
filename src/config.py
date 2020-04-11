@@ -11,6 +11,7 @@ from __future__ import print_function
 import sys
 from absl import flags
 import os.path as osp
+import os
 from os import makedirs
 from glob import glob
 from datetime import datetime
@@ -19,7 +20,7 @@ import json
 import numpy as np
 
 # curr_path = '/content/hmr/src/'
-base_dir = '/content/drive/My Drive/'
+base_dir = osp.abspath(".")
 model_dir = osp.join(base_dir, 'models')
 # if not osp.exists(model_dir):
 #     print('Fix path to models/')
@@ -32,12 +33,18 @@ SMPL_FACE_PATH = osp.join(base_dir, 'src/tf_smpl', 'smpl_faces.npy')
 PRETRAINED_MODEL = osp.join(model_dir, 'model.ckpt-667589')
 RESNET_PATH = osp.join(base_dir, 'models/resnet_v2_50/resnet_v2_50.ckpt')
 
+# 从之前保存的地方继续训练
+MODEL_LOG_PATH = None
+if len(os.listdir(osp.join(base_dir, 'logs/'))) > 0:
+    MODEL_LOG_PATH = os.listdir(osp.join(base_dir, 'logs/'))[0]
+
 flags.DEFINE_string('smpl_model_path', SMPL_MODEL_PATH,
                     'path to the neurtral smpl model')
 flags.DEFINE_string('smpl_face_path', SMPL_FACE_PATH,
                     'path to smpl mesh faces (for easy rendering)')
 # flags.DEFINE_string('load_path', None, 'path to trained model')
-flags.DEFINE_string('load_path', osp.join(base_dir, 'logs/HMR_3DSUP_resnet_fc3_dropout_Elr1e-05_kp-weight60_Dlr1e-04_3dsup-weight60_Apr07_1249'), 'path to trained model')
+flags.DEFINE_string('load_path', MODEL_LOG_PATH, 'path to trained model')
+# flags.DEFINE_string('load_path', osp.join(base_dir, 'logs/HMR_3DSUP_resnet_fc3_dropout_Elr1e-05_kp-weight60_Dlr1e-04_3dsup-weight60_Apr07_1249'), 'path to trained model')
 flags.DEFINE_string('pretrained_model_path', RESNET_PATH,
                     'if not None, fine-tunes from this ckpt')
 flags.DEFINE_integer('batch_size', 64,
@@ -116,8 +123,11 @@ def prepare_dirs(config, prefix=['HMR']):
     if config.load_path:
         if not osp.exists(config.load_path):
             print("load_path: %s doesnt exist..!!!" % config.load_path)
-            import ipdb
-            ipdb.set_trace()
+            with open("hmrlog.txt",'a') as f:
+                f.write("load_path doenst exist..!!\n")
+            exit(1)
+            # import ipdb
+            # ipdb.set_trace()
         print('continuing from %s!' % config.load_path)
 
         # Check for changed training parameter:
@@ -151,8 +161,11 @@ def prepare_dirs(config, prefix=['HMR']):
 
         if len(diff_keys) > 0:
             print("really continue??")
-            import ipdb
-            ipdb.set_trace()
+            with open("hmrlog.txt",'a') as f:
+                f.write("config diff keys > 0..!!\n")
+            exit(1)
+            # import ipdb
+            # ipdb.set_trace()
 
         config.model_dir = config.load_path
 
