@@ -40,10 +40,10 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     with tf.name_scope("Encoder_resnet", values = [x]) as scope:
         with slim.arg_scope(
                 resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
-            net = slim.conv2d(x, 3, kernel_size=7, stride=2, padding=3)
+            net = slim.conv2d(x, 3, kernel_size=[7,7], stride=2, padding=3)
             net = slim.batch_norm(net)
             net = slim.relu(net)
-            net = slim.max_pool2d(net, kernel_size=3, stride=2)
+            net = slim.max_pool2d(net, kernel_size=[3,3], stride=2)
             # bottom-up
             net_c2, end_points = resnet_v2.resnet_v2(
                 net,
@@ -74,26 +74,26 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
                 reuse=reuse,
                 scope='resnet_v2_101')
             # top-down
-            net_p5 = slim.conv2d(net_c5, 256, kernel_size=1, stride=1, padding=0)
+            net_p5 = slim.conv2d(net_c5, 256, kernel_size=[1,1], stride=1, padding=0)
 
-            net_p4 = slim.conv2d(net_c4, 256, kernel_size=1, stride=1, padding=0)
+            net_p4 = slim.conv2d(net_c4, 256, kernel_size=[1,1], stride=1, padding=0)
             _, H, W, _ = tf.size(net_p4)
             net_p4 = tf.keras.layers.UpSampling2D(size=(H,W), interpolation='bilinear')(net_p5) + net_p4
-            net_p4 = slim.conv2d(net_p4, 256, kernel_size=3, stride=1, padding=1)
+            net_p4 = slim.conv2d(net_p4, 256, kernel_size=[3,3], stride=1, padding=1)
 
-            net_p3 = slim.conv2d(net_c3, 256, kernel_size=1, stride=1, padding=0)
+            net_p3 = slim.conv2d(net_c3, 256, kernel_size=[1,1], stride=1, padding=0)
             _, H, W, _ = tf.size(net_p3)
             net_p3 = tf.keras.layers.UpSampling2D(size=(H,W), interpolation='bilinear')(net_p4) + net_p3
-            net_p3 = slim.conv2d(net_p3, 256, kernel_size=3, stride=1, padding=1)
+            net_p3 = slim.conv2d(net_p3, 256, kernel_size=[3,3], stride=1, padding=1)
 
-            net_p2 = slim.conv2d(net_c2, 256, kernel_size=1, stride=1, padding=0)
+            net_p2 = slim.conv2d(net_c2, 256, kernel_size=[1,1], stride=1, padding=0)
             _, H, W, _ = tf.size(net_p2)
             net_p2 = tf.keras.layers.UpSampling2D(size=(H,W), interpolation='bilinear')(net_p3) + net_p2
-            net_p2 = slim.conv2d(net_p2, 256, kernel_size=3, stride=1, padding=0)
+            net_p2 = slim.conv2d(net_p2, 256, kernel_size=[3,3], stride=1, padding=0)
             # final conv+relu, then fcn
-            net = slim.conv2d(net_p2, 64, kernel_size=3, stride=1, padding=1)
+            net = slim.conv2d(net_p2, 64, kernel_size=[3,3], stride=1, padding=1)
             net = slim.relu(net)
-            net = slim.conv2d(net, 1, kernel_size=3, stride=1, padding=1)
+            net = slim.conv2d(net, 1, kernel_size=[3,3], stride=1, padding=1)
             net = slim.relu(net)  # batch * 56 * 56 * 1
             net = slim.flatten(net) # flatten
             net = slim.fully_connected(net, 2048)
