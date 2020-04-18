@@ -21,6 +21,7 @@ cd ..
 
 pip3 install deepdish --user
 pip3 install chumpy --user
+# pip3 install gast==0.2.2 --user
 
 # get train code from github
 wget https://github.com/wolverinn/hmr2020/archive/master.zip

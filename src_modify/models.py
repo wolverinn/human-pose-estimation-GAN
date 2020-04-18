@@ -40,61 +40,74 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     with tf.name_scope("Encoder_resnet", values = [x]) as scope:
         with slim.arg_scope(
                 resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
-            net = slim.conv2d(x, 3, kernel_size=[7,7], stride=2, padding=3)
-            net = slim.batch_norm(net)
-            net = slim.relu(net)
-            net = slim.max_pool2d(net, kernel_size=[3,3], stride=2)
+            # net = slim.conv2d(x, 3, kernel_size=7, stride=2)
+            # net = slim.batch_norm(net)
+            # net = tf.nn.relu(net)
+            # net = slim.max_pool2d(net, kernel_size=3, stride=2, padding="SAME")
+            net = x
             # bottom-up
             net_c2, end_points = resnet_v2.resnet_v2(
                 net,
-                blocks = [resnet_v2.resnet_v2_block('block1', base_depth=64, num_units=3, stride=2)],
-                num_classes = 64,
+                blocks = [resnet_v2.resnet_v2_block('block1', base_depth=64, num_units=3, stride=1)],
+                # num_classes = 64,
+                global_pool=False,
                 is_training = is_training,
-                reuse=reuse,
-                scope='resnet_v2_101')
+                reuse=tf.AUTO_REUSE,
+                scope='resnet_v2_101_b1')
             net_c3, end_points = resnet_v2.resnet_v2(
                 net_c2,
                 blocks=[resnet_v2.resnet_v2_block('block2', base_depth=128, num_units=4, stride=2)],
-                num_classes=128,
+                # num_classes=128,
+                global_pool=False,
                 is_training=is_training,
-                reuse=reuse,
-                scope='resnet_v2_101')
+                reuse=tf.AUTO_REUSE,
+                include_root_block=False,
+                scope='resnet_v2_101_b2')
             net_c4, end_points = resnet_v2.resnet_v2(
                 net_c3,
                 blocks=[resnet_v2.resnet_v2_block('block3', base_depth=256, num_units=23, stride=2)],
-                num_classes=256,
+                # num_classes=256,
+                global_pool=False,
                 is_training=is_training,
-                reuse=reuse,
-                scope='resnet_v2_101')
+                reuse=tf.AUTO_REUSE,
+                include_root_block=False,
+                scope='resnet_v2_101_b3')
             net_c5, end_points = resnet_v2.resnet_v2(
                 net_c4,
-                blocks=[resnet_v2.resnet_v2_block('block4', base_depth=512, num_units=3, stride=1)],
-                num_classes=512,
+                blocks=[resnet_v2.resnet_v2_block('block4', base_depth=512, num_units=3, stride=2)],
+                # num_classes=512,
+                global_pool=False,
                 is_training=is_training,
-                reuse=reuse,
-                scope='resnet_v2_101')
+                reuse=tf.AUTO_REUSE,
+                include_root_block=False,
+                scope='resnet_v2_101_b4')
+            print("net_c5:", net_c5.shape.as_list())
+            print("net_c4:", net_c4.shape.as_list())
+            print("net_c3:", net_c3.shape.as_list())
+            print("net_c2:", net_c2.shape.as_list())
+            print("net: ", net.shape.as_list())
             # top-down
-            net_p5 = slim.conv2d(net_c5, 256, kernel_size=[1,1], stride=1, padding=0)
+            net_p5 = slim.conv2d(net_c5, 256, kernel_size=1, stride=1)
 
-            net_p4 = slim.conv2d(net_c4, 256, kernel_size=[1,1], stride=1, padding=0)
-            _, H, W, _ = tf.size(net_p4)
-            net_p4 = tf.keras.layers.UpSampling2D(size=(H,W), interpolation='bilinear')(net_p5) + net_p4
-            net_p4 = slim.conv2d(net_p4, 256, kernel_size=[3,3], stride=1, padding=1)
+            net_p4 = slim.conv2d(net_c4, 256, kernel_size=1, stride=1)
+            # tensor_shape = net_p4.shape.as_list()
+            net_p4 = tf.keras.layers.UpSampling2D(size=(2,2), interpolation='bilinear')(net_p5) + net_p4
+            net_p4 = slim.conv2d(net_p4, 256, kernel_size=3, stride=1)
 
-            net_p3 = slim.conv2d(net_c3, 256, kernel_size=[1,1], stride=1, padding=0)
-            _, H, W, _ = tf.size(net_p3)
-            net_p3 = tf.keras.layers.UpSampling2D(size=(H,W), interpolation='bilinear')(net_p4) + net_p3
-            net_p3 = slim.conv2d(net_p3, 256, kernel_size=[3,3], stride=1, padding=1)
+            net_p3 = slim.conv2d(net_c3, 256, kernel_size=1, stride=1)
+            # tensor_shape = net_p3.shape.as_list()
+            net_p3 = tf.keras.layers.UpSampling2D(size=(2,2), interpolation='bilinear')(net_p4) + net_p3
+            net_p3 = slim.conv2d(net_p3, 256, kernel_size=3, stride=1)
 
-            net_p2 = slim.conv2d(net_c2, 256, kernel_size=[1,1], stride=1, padding=0)
-            _, H, W, _ = tf.size(net_p2)
-            net_p2 = tf.keras.layers.UpSampling2D(size=(H,W), interpolation='bilinear')(net_p3) + net_p2
-            net_p2 = slim.conv2d(net_p2, 256, kernel_size=[3,3], stride=1, padding=0)
+            net_p2 = slim.conv2d(net_c2, 256, kernel_size=1, stride=1)
+            # tensor_shape = net_p2.shape.as_list()
+            net_p2 = tf.keras.layers.UpSampling2D(size=(2,2), interpolation='bilinear')(net_p3) + net_p2
+            net_p2 = slim.conv2d(net_p2, 256, kernel_size=3, stride=1)
             # final conv+relu, then fcn
-            net = slim.conv2d(net_p2, 64, kernel_size=[3,3], stride=1, padding=1)
-            net = slim.relu(net)
-            net = slim.conv2d(net, 1, kernel_size=[3,3], stride=1, padding=1)
-            net = slim.relu(net)  # batch * 56 * 56 * 1
+            net = slim.conv2d(net_p2, 64, kernel_size=3, stride=1)
+            net = tf.nn.relu(net)
+            net = slim.conv2d(net, 1, kernel_size=3, stride=1)
+            net = tf.nn.relu(net)  # batch * 56 * 56 * 1
             net = slim.flatten(net) # flatten
             net = slim.fully_connected(net, 2048)
 
@@ -108,11 +121,10 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     variables = tf.contrib.framework.get_variables(scope)
     return net, variables
 
-def Encoder_gru_dropout(x, initial_state, num_stage=3, num_output=85, is_training=True):
+def Encoder_gru_dropout(x, initial_state, num_output=85, is_training=True):
     x_input = tf.expand_dims(x, 1)
-    x_input[1] = num_stage
     with tf.variable_scope("gru_dropout") as scope:
-        gru_layer = tf.keras.layers.GRU(units=num_output, recurrent_dropout=0.5, return_sequences=True)
+        gru_layer = tf.keras.layers.GRU(units=num_output, recurrent_dropout=0.5)
         net = gru_layer(x_input, initial_state=initial_state, trainable=is_training)
     variables = tf.contrib.framework.get_variables(scope)
     return net, variables
