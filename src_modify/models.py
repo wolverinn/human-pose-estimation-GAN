@@ -37,7 +37,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     - variables: tf variables
     """
     from tensorflow.contrib.slim.python.slim.nets import resnet_v2
-    with tf.name_scope("Encoder_resnet", values = [x]):
+    with tf.name_scope("Encoder_resnet", values = [x]) as scope:
         with slim.arg_scope(
                 resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
             net = slim.conv2d(x, 3, kernel_size=7, stride=2, padding=3)
@@ -105,14 +105,17 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
             #     reuse=reuse,
             #     scope='resnet_v2_50')
             # net = tf.squeeze(net, axis=[1, 2])
-    variables = tf.contrib.framework.get_variables('resnet_v2_50')
+    variables = tf.contrib.framework.get_variables(scope)
     return net, variables
 
 def Encoder_gru_dropout(x, initial_state, num_stage=3, num_output=85, is_training=True):
     x_input = tf.expand_dims(x, 1)
     x_input[1] = num_stage
-    gru_layer = tf.keras.layers.GRU(units=num_output, recurrent_dropout=0.5, return_sequences=True)
-    return gru_layer(x_input, initial_state=initial_state, trainable=is_training)
+    with tf.variable_scope("gru_dropout") as scope:
+        gru_layer = tf.keras.layers.GRU(units=num_output, recurrent_dropout=0.5, return_sequences=True)
+        net = gru_layer(x_input, initial_state=initial_state, trainable=is_training)
+    variables = tf.contrib.framework.get_variables(scope)
+    return net, variables
 
 def Encoder_fc3_dropout(x,
                         num_output=85,
@@ -167,7 +170,7 @@ def get_encoder_fn_separate(model_type):
         exit(1)
 
     if 'fc3_dropout' in model_type:
-        threed_fn = Encoder_fc3_dropout
+        threed_fn = Encoder_gru_dropout
 
     if encoder_fn is None or threed_fn is None:
         print('Dont know what encoder to use for %s' % model_type)

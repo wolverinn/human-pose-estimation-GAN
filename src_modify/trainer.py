@@ -222,24 +222,18 @@ class HMRTrainer(object):
         self.all_delta_thetas = []
         self.all_theta_prev = []
 
-        # Main IEF loop
+        # GRU sequence
+        state = tf.concat([self.img_feat, theta_prev], 1)
+        gru_output_sequence, threeD_var = threed_enc_fn(state,
+                                                        initial_state=theta_prev,
+                                                        num_stage=self.num_stage,
+                                                        num_output=self.total_params)
+        self.E_var.extend(threeD_var)
         for i in np.arange(self.num_stage):
             print('Iteration %d' % i)
             # ---- Compute outputs
-            state = tf.concat([self.img_feat, theta_prev], 1)
-
-            if i == 0:
-                delta_theta, threeD_var = threed_enc_fn(
-                    state,
-                    num_output=self.total_params,
-                    reuse=False)
-                self.E_var.extend(threeD_var)
-            else:
-                delta_theta, _ = threed_enc_fn(
-                    state, num_output=self.total_params, reuse=True)
-
             # Compute new theta
-            theta_here = theta_prev + delta_theta
+            theta_here = tf.squeeze(gru_output_sequence[:,i,:])
             # cam = N x 3, pose N x self.num_theta, shape: N x 10
             cams = theta_here[:, :self.num_cam]
             poses = theta_here[:, self.num_cam:(self.num_cam + self.num_theta)]
