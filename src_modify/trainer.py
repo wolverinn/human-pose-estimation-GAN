@@ -121,6 +121,10 @@ class HMRTrainer(object):
         self.smpl = SMPL(self.smpl_model_path)
         self.E_var = []
         self.build_model()
+        # check get_variables
+        for var in self.E_var:
+            print("====================")
+            print(var.name)
 
         # Logging
         init_fn = None
@@ -131,6 +135,7 @@ class HMRTrainer(object):
                 resnet_vars = [
                     var for var in self.E_var if 'resnet_v2_101' in var.name and 'postnorm' not in var.name
                 ]
+                resnet_vars = list(set(resnet_vars))
                 self.pre_train_saver = tf.train.Saver(resnet_vars)
             # elif 'pose-tensorflow' in self.pretrained_model_path:
             #     resnet_vars = [
@@ -235,10 +240,6 @@ class HMRTrainer(object):
                     num_output=self.total_params,
                     reuse=None)
                 self.E_var.extend(threeD_var)
-                for var in self.E_var:
-                    if "gru" in var.name:
-                        print("====================")
-                        print(var.name)
             else:
                 delta_theta, _ = threed_enc_fn(
                     state, initial_state=theta_prev, num_output=self.total_params, reuse=True)

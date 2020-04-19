@@ -1,6 +1,6 @@
 # wget https://github.com/wolverinn/hmr2020/raw/master/auto.sh && bash auto.sh
 # tensorflow<=1.14
-# 确认src/main.py中使用的device是选gpu还是cpu
+# 确认src/main.py中使用的device是选gpu还是cpu，以及config.py中的batch_size
 
 mkdir hmr
 cd hmr/
@@ -27,7 +27,7 @@ pip3 install chumpy --user
 wget https://github.com/wolverinn/hmr2020/archive/master.zip
 unzip master.zip
 rm master.zip
-mv ./hmr2020-master/src ./src
+mv ./hmr2020-master/src_modify ./src
 mv ./hmr2020-master/start.sh ./start.sh
 rm -rf hmr2020-master
 
