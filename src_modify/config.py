@@ -47,7 +47,7 @@ flags.DEFINE_string('load_path', MODEL_LOG_PATH, 'path to trained model')
 # flags.DEFINE_string('load_path', osp.join(base_dir, 'logs/HMR_3DSUP_resnet_fc3_dropout_Elr1e-05_kp-weight60_Dlr1e-04_3dsup-weight60_Apr07_1249'), 'path to trained model')
 flags.DEFINE_string('pretrained_model_path', RESNET_PATH,
                     'if not None, fine-tunes from this ckpt')
-flags.DEFINE_integer('batch_size', 64,
+flags.DEFINE_integer('batch_size', 4,
                      'Input image size to the network after preprocessing')
 
 # Don't change if testing:

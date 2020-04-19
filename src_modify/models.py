@@ -37,7 +37,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     - variables: tf variables
     """
     # from tensorflow.contrib.slim.python.slim.nets import resnet_v2
-    import resnet_v2
+    from src import resnet_v2
     with slim.arg_scope(
             resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
         # net = slim.conv2d(x, 3, kernel_size=7, stride=2)
@@ -52,7 +52,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
             # num_classes = 64,
             global_pool=False,
             is_training = is_training,
-            reuse=tf.AUTO_REUSE,
+            reuse=False,
             scope='resnet_v2_101',
             post_norm_scope='postnorm_b1')
         net_c3, end_points = resnet_v2.resnet_v2(
@@ -61,7 +61,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
             # num_classes=128,
             global_pool=False,
             is_training=is_training,
-            reuse=tf.AUTO_REUSE,
+            reuse=False,
             include_root_block=False,
             scope='resnet_v2_101',
             post_norm_scope='postnorm_b2')
@@ -71,7 +71,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
             # num_classes=256,
             global_pool=False,
             is_training=is_training,
-            reuse=tf.AUTO_REUSE,
+            reuse=False,
             include_root_block=False,
             scope='resnet_v2_101',
             post_norm_scope='postnorm_b3')
@@ -81,7 +81,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
             # num_classes=512,
             global_pool=False,
             is_training=is_training,
-            reuse=tf.AUTO_REUSE,
+            reuse=False,
             include_root_block=False,
             scope='resnet_v2_101',
             post_norm_scope='postnorm_b4')
@@ -124,7 +124,9 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
             #     reuse=reuse,
             #     scope='resnet_v2_50')
             # net = tf.squeeze(net, axis=[1, 2])
-    variables = tf.contrib.framework.get_variables(scope)
+    variables = tf.contrib.framework.get_variables('resnet_v2_101')
+    variables_top_down = tf.contrib.framework.get_variables(scope)
+    variables.extend(variables_top_down)
     return net, variables
 
 def Encoder_gru_dropout(x, initial_state, num_output=85, reuse = False):

@@ -1,6 +1,6 @@
 # wget https://github.com/wolverinn/hmr2020/raw/master/auto.sh && bash auto.sh
 # tensorflow<=1.14
-# 确认src/main.py中使用的device是选gpu还是cpu
+# 确认src/main.py中使用的device是选gpu还是cpu，以及config.py中的batch_size
 
 mkdir hmr
 cd hmr/
