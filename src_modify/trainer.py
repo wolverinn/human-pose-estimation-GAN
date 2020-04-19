@@ -145,7 +145,7 @@ class HMRTrainer(object):
 
             init_fn = load_pretrain
 
-        self.saver = tf.train.Saver(keep_checkpoint_every_n_hours=1)
+        self.saver = tf.train.Saver(keep_checkpoint_every_n_hours=60)
         self.summary_writer = tf.summary.FileWriter(self.model_dir)
         self.sv = tf.train.Supervisor(
             logdir=self.model_dir,
@@ -600,6 +600,7 @@ class HMRTrainer(object):
                         % (step, epoch, t1 - t0, e_loss, d_loss))
 
                 if step % self.log_img_step == 0:
+                    self.sv.saver.save(sess, self.model_dir, global_step=step)
                     if not self.encoder_only:
                         self.summary_writer.add_summary(
                             result['summary_occasional'],

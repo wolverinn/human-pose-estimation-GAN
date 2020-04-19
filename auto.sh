@@ -9,13 +9,13 @@ mkdir logs
 
 cd ./models/
 wget https://people.eecs.berkeley.edu/~kanazawa/cachedir/hmr/neutral_smpl_mean_params.h5
-wget http://download.tensorflow.org/models/resnet_v2_50_2017_04_14.tar.gz
+wget http://download.tensorflow.org/models/resnet_v2_101_2017_04_14.tar.gz
 wget https://people.eecs.berkeley.edu/~kanazawa/cachedir/hmr/models.tar.gz
-mkdir resnet_v2_50
-tar -xf resnet_v2_50_2017_04_14.tar.gz -C ./resnet_v2_50
+mkdir resnet_v2_101
+tar -xf resnet_v2_101_2017_04_14.tar.gz -C ./resnet_v2_101
 tar -xf models.tar.gz
 mv ./models/neutral_smpl_with_cocoplus_reg.pkl ./neutral_smpl_with_cocoplus_reg.pkl
-rm resnet_v2_50_2017_04_14.tar.gz
+rm resnet_v2_101_2017_04_14.tar.gz
 rm models.tar.gz
 cd ..
 
