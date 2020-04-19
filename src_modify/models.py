@@ -121,19 +121,19 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     variables = tf.contrib.framework.get_variables(scope)
     return net, variables
 
-def Encoder_gru_dropout(x, initial_state, num_output=85, is_training=True):
+def Encoder_gru_dropout(x, initial_state, num_output=85, reuse = False):
     x_input = tf.expand_dims(x, 1)
     print("gru_input:", x_input.shape.as_list())
-    with tf.variable_scope("gru_dropout") as scope:
+    with tf.variable_scope("gru_dropout", reuse=reuse) as scope:
         gru_layer = tf.keras.layers.GRU(units=num_output, dropout=0.5)
-        net = gru_layer(x_input, initial_state=initial_state, trainable=is_training)
+        net = gru_layer(x_input, initial_state=initial_state)
     variables = tf.contrib.framework.get_variables(scope)
     return net, variables
 
 def Encoder_fc3_dropout(x,
                         num_output=85,
                         is_training=True,
-                        reuse=False,
+                        reuse=None,
                         name="3D_module"):
     """
     3D inference module. 3 MLP layers (last is the output)

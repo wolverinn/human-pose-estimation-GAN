@@ -127,16 +127,16 @@ class HMRTrainer(object):
         if self.use_pretrained():
             # Make custom init_fn
             print("Fine-tuning from %s" % self.pretrained_model_path)
-            if 'resnet_v2_50' in self.pretrained_model_path:
+            if 'resnet_v2_101' in self.pretrained_model_path:
                 resnet_vars = [
-                    var for var in self.E_var if 'resnet_v2_50' in var.name
+                    var for var in self.E_var if 'resnet_v2_101' in var.name
                 ]
                 self.pre_train_saver = tf.train.Saver(resnet_vars)
-            elif 'pose-tensorflow' in self.pretrained_model_path:
-                resnet_vars = [
-                    var for var in self.E_var if 'resnet_v1_101' in var.name
-                ]
-                self.pre_train_saver = tf.train.Saver(resnet_vars)
+            # elif 'pose-tensorflow' in self.pretrained_model_path:
+            #     resnet_vars = [
+            #         var for var in self.E_var if 'resnet_v1_101' in var.name
+            #     ]
+            #     self.pre_train_saver = tf.train.Saver(resnet_vars)
             else:
                 self.pre_train_saver = tf.train.Saver()
 
@@ -233,11 +233,11 @@ class HMRTrainer(object):
                     state,
                     initial_state=theta_prev,
                     num_output=self.total_params,
-                    is_training=True)
+                    reuse=None)
                 self.E_var.extend(threeD_var)
             else:
                 delta_theta, _ = threed_enc_fn(
-                    state, initial_state=theta_prev, num_output=self.total_params, is_training=True)
+                    state, initial_state=theta_prev, num_output=self.total_params, reuse=True)
 
             # Compute new theta
             theta_here = theta_prev + delta_theta
@@ -540,7 +540,7 @@ class HMRTrainer(object):
             while not self.sv.should_stop():
                 print("Start training! Global Step = {}".format(str(step)))
                 with open("hmr_log.txt",'a') as f:
-                    f.write("Start training! Global Step = 0\n")
+                    f.write("Start training! Global Step = {}\n".format(str(step)))
                 fetch_dict = {
                     "summary": self.summary_op_always,
                     "step": self.global_step,

@@ -31,7 +31,7 @@ SMPL_FACE_PATH = osp.join(base_dir, 'src/tf_smpl', 'smpl_faces.npy')
 
 # Default pred-trained model path for the demo.
 PRETRAINED_MODEL = osp.join(model_dir, 'model.ckpt-667589')
-RESNET_PATH = osp.join(base_dir, 'models/resnet_v2_50/resnet_v2_50.ckpt')
+RESNET_PATH = osp.join(base_dir, 'models/resnet_v2_101/resnet_v2_101.ckpt')
 
 # 从之前保存的地方继续训练
 MODEL_LOG_PATH = None
