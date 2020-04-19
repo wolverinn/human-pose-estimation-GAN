@@ -129,7 +129,7 @@ class HMRTrainer(object):
             print("Fine-tuning from %s" % self.pretrained_model_path)
             if 'resnet_v2_101' in self.pretrained_model_path:
                 resnet_vars = [
-                    var for var in self.E_var if 'resnet_v2_101' in var.name
+                    var for var in self.E_var if 'resnet_v2_101' in var.name and 'postnorm' not in var.name
                 ]
                 self.pre_train_saver = tf.train.Saver(resnet_vars)
             # elif 'pose-tensorflow' in self.pretrained_model_path:
@@ -235,6 +235,10 @@ class HMRTrainer(object):
                     num_output=self.total_params,
                     reuse=None)
                 self.E_var.extend(threeD_var)
+                for var in self.E_var:
+                    if "gru" in var.name:
+                        print("====================")
+                        print(var.name)
             else:
                 delta_theta, _ = threed_enc_fn(
                     state, initial_state=theta_prev, num_output=self.total_params, reuse=True)

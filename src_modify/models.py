@@ -36,57 +36,63 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
     - Shape vector: N x 10
     - variables: tf variables
     """
-    from tensorflow.contrib.slim.python.slim.nets import resnet_v2
-    with tf.name_scope("Encoder_resnet", values = [x]) as scope:
-        with slim.arg_scope(
-                resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
-            # net = slim.conv2d(x, 3, kernel_size=7, stride=2)
-            # net = slim.batch_norm(net)
-            # net = tf.nn.relu(net)
-            # net = slim.max_pool2d(net, kernel_size=3, stride=2, padding="SAME")
-            net = x
-            # bottom-up
-            net_c2, end_points = resnet_v2.resnet_v2(
-                net,
-                blocks = [resnet_v2.resnet_v2_block('block1', base_depth=64, num_units=3, stride=1)],
-                # num_classes = 64,
-                global_pool=False,
-                is_training = is_training,
-                reuse=tf.AUTO_REUSE,
-                scope='resnet_v2_101_b1')
-            net_c3, end_points = resnet_v2.resnet_v2(
-                net_c2,
-                blocks=[resnet_v2.resnet_v2_block('block2', base_depth=128, num_units=4, stride=2)],
-                # num_classes=128,
-                global_pool=False,
-                is_training=is_training,
-                reuse=tf.AUTO_REUSE,
-                include_root_block=False,
-                scope='resnet_v2_101_b2')
-            net_c4, end_points = resnet_v2.resnet_v2(
-                net_c3,
-                blocks=[resnet_v2.resnet_v2_block('block3', base_depth=256, num_units=23, stride=2)],
-                # num_classes=256,
-                global_pool=False,
-                is_training=is_training,
-                reuse=tf.AUTO_REUSE,
-                include_root_block=False,
-                scope='resnet_v2_101_b3')
-            net_c5, end_points = resnet_v2.resnet_v2(
-                net_c4,
-                blocks=[resnet_v2.resnet_v2_block('block4', base_depth=512, num_units=3, stride=2)],
-                # num_classes=512,
-                global_pool=False,
-                is_training=is_training,
-                reuse=tf.AUTO_REUSE,
-                include_root_block=False,
-                scope='resnet_v2_101_b4')
-            print("net_c5:", net_c5.shape.as_list())
-            print("net_c4:", net_c4.shape.as_list())
-            print("net_c3:", net_c3.shape.as_list())
-            print("net_c2:", net_c2.shape.as_list())
-            print("net: ", net.shape.as_list())
-            # top-down
+    # from tensorflow.contrib.slim.python.slim.nets import resnet_v2
+    import resnet_v2
+    with slim.arg_scope(
+            resnet_v2.resnet_arg_scope(weight_decay=weight_decay)):
+        # net = slim.conv2d(x, 3, kernel_size=7, stride=2)
+        # net = slim.batch_norm(net)
+        # net = tf.nn.relu(net)
+        # net = slim.max_pool2d(net, kernel_size=3, stride=2, padding="SAME")
+        net = x
+        # bottom-up
+        net_c2, end_points = resnet_v2.resnet_v2(
+            net,
+            blocks = [resnet_v2.resnet_v2_block('block1', base_depth=64, num_units=3, stride=1)],
+            # num_classes = 64,
+            global_pool=False,
+            is_training = is_training,
+            reuse=tf.AUTO_REUSE,
+            scope='resnet_v2_101',
+            post_norm_scope='postnorm_b1')
+        net_c3, end_points = resnet_v2.resnet_v2(
+            net_c2,
+            blocks=[resnet_v2.resnet_v2_block('block2', base_depth=128, num_units=4, stride=2)],
+            # num_classes=128,
+            global_pool=False,
+            is_training=is_training,
+            reuse=tf.AUTO_REUSE,
+            include_root_block=False,
+            scope='resnet_v2_101',
+            post_norm_scope='postnorm_b2')
+        net_c4, end_points = resnet_v2.resnet_v2(
+            net_c3,
+            blocks=[resnet_v2.resnet_v2_block('block3', base_depth=256, num_units=23, stride=2)],
+            # num_classes=256,
+            global_pool=False,
+            is_training=is_training,
+            reuse=tf.AUTO_REUSE,
+            include_root_block=False,
+            scope='resnet_v2_101',
+            post_norm_scope='postnorm_b3')
+        net_c5, end_points = resnet_v2.resnet_v2(
+            net_c4,
+            blocks=[resnet_v2.resnet_v2_block('block4', base_depth=512, num_units=3, stride=2)],
+            # num_classes=512,
+            global_pool=False,
+            is_training=is_training,
+            reuse=tf.AUTO_REUSE,
+            include_root_block=False,
+            scope='resnet_v2_101',
+            post_norm_scope='postnorm_b4')
+        print("net_c5:", net_c5.shape.as_list())
+        print("net_c4:", net_c4.shape.as_list())
+        print("net_c3:", net_c3.shape.as_list())
+        print("net_c2:", net_c2.shape.as_list())
+        print("net: ", net.shape.as_list())
+
+        # top-down
+        with tf.variable_scope("Encoder_resnet") as scope:
             net_p5 = slim.conv2d(net_c5, 256, kernel_size=1, stride=1)
 
             net_p4 = slim.conv2d(net_c4, 256, kernel_size=1, stride=1)
@@ -123,7 +129,7 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
 
 def Encoder_gru_dropout(x, initial_state, num_output=85, reuse = False):
     x_input = tf.expand_dims(x, 1)
-    print("gru_input:", x_input.shape.as_list())
+    # print("gru_input:", x_input.shape.as_list())
     with tf.variable_scope("gru_dropout", reuse=reuse) as scope:
         gru_layer = tf.keras.layers.GRU(units=num_output, dropout=0.5)
         net = gru_layer(x_input, initial_state=initial_state)
