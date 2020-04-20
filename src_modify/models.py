@@ -93,27 +93,27 @@ def Encoder_resnet(x, is_training=True, weight_decay=0.001, reuse=False):
 
         # top-down
         with tf.variable_scope("Encoder_resnet") as scope:
-            net_p5 = slim.conv2d(net_c5, 256, kernel_size=1, stride=1)
+            net_p5 = slim.conv2d(net_c5, 256, kernel_size=1, stride=1, activation_fn=None)
 
-            net_p4 = slim.conv2d(net_c4, 256, kernel_size=1, stride=1)
+            net_p4 = slim.conv2d(net_c4, 256, kernel_size=1, stride=1, activation_fn=None)
             # tensor_shape = net_p4.shape.as_list()
             net_p4 = tf.keras.layers.UpSampling2D(size=(2,2), interpolation='bilinear')(net_p5) + net_p4
-            net_p4 = slim.conv2d(net_p4, 256, kernel_size=3, stride=1)
+            net_p4 = slim.conv2d(net_p4, 256, kernel_size=3, stride=1, activation_fn=None)
 
-            net_p3 = slim.conv2d(net_c3, 256, kernel_size=1, stride=1)
+            net_p3 = slim.conv2d(net_c3, 256, kernel_size=1, stride=1, activation_fn=None)
             # tensor_shape = net_p3.shape.as_list()
             net_p3 = tf.keras.layers.UpSampling2D(size=(2,2), interpolation='bilinear')(net_p4) + net_p3
-            net_p3 = slim.conv2d(net_p3, 256, kernel_size=3, stride=1)
+            net_p3 = slim.conv2d(net_p3, 256, kernel_size=3, stride=1, activation_fn=None)
 
-            net_p2 = slim.conv2d(net_c2, 256, kernel_size=1, stride=1)
+            net_p2 = slim.conv2d(net_c2, 256, kernel_size=1, stride=1, activation_fn=None)
             # tensor_shape = net_p2.shape.as_list()
             net_p2 = tf.keras.layers.UpSampling2D(size=(2,2), interpolation='bilinear')(net_p3) + net_p2
-            net_p2 = slim.conv2d(net_p2, 256, kernel_size=3, stride=1)
+            net_p2 = slim.conv2d(net_p2, 256, kernel_size=3, stride=1, activation_fn=None)
             # final conv+relu, then fcn
             net = slim.conv2d(net_p2, 64, kernel_size=3, stride=1)
-            net = tf.nn.relu(net)
+            # net = tf.nn.relu(net)
             net = slim.conv2d(net, 1, kernel_size=3, stride=1)
-            net = tf.nn.relu(net)  # batch * 56 * 56 * 1
+            # net = tf.nn.relu(net)  # batch * 56 * 56 * 1
             net = slim.flatten(net) # flatten
             net = slim.fully_connected(net, 2048)
 

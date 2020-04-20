@@ -71,10 +71,10 @@ flags.DEFINE_string('model_dir', osp.join(base_dir, 'logs/'), 'Where model will 
 flags.DEFINE_integer('log_img_step', 1000, 'How often to visualize img during training')
 flags.DEFINE_integer('epoch', 75, '# of epochs to train')
 
-# flags.DEFINE_list('datasets', ['lsp', 'lsp_ext', 'mpii', 'coco', 'mpi_inf_3dhp'],
-#                           'datasets to use for training')
-flags.DEFINE_list('datasets', ['lsp', 'lsp_ext', 'mpii', 'coco'],
+flags.DEFINE_list('datasets', ['lsp', 'lsp_ext', 'mpii', 'coco', 'mpi_inf_3dhp'],
                           'datasets to use for training')
+# flags.DEFINE_list('datasets', ['lsp', 'lsp_ext', 'mpii', 'coco'],
+#                           'datasets to use for training')
 flags.DEFINE_list('mocap_datasets', ['CMU', 'jointLim'],
                   'datasets to use for adversarial prior training')
 
@@ -84,7 +84,7 @@ flags.DEFINE_boolean(
     'if set, no adversarial prior is trained = monsters')
 
 flags.DEFINE_boolean(
-    'use_3d_label', False,
+    'use_3d_label', True,
     'Uses 3D labels if on.')
 
 # Hyper parameters:

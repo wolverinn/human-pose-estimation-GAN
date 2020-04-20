@@ -15,7 +15,7 @@ def main(config):
     prepare_dirs(config)
 
     # Load data on CPU
-    with tf.device("/cpu:0"):
+    with tf.device("/gpu:0"):
         data_loader = DataLoader(config)
         image_loader = data_loader.load()
         smpl_loader = data_loader.get_smpl_loader()
