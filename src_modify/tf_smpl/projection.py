@@ -12,6 +12,10 @@ import tensorflow as tf
 
 def batch_orth_proj_idrot(X, camera, name=None):
     """
+    formula:
+    if joint coordinates are (x, y, z), camera params are (a, b, c)
+    then 2D joint coordinates are a * (x + b, y + c)
+
     X is N x num_points x 3
     camera is N x 3
     same as applying orth_proj_idrot to each N 
@@ -20,9 +24,9 @@ def batch_orth_proj_idrot(X, camera, name=None):
         # TODO check X dim size.
         # tf.Assert(X.shape[2] == 3, [X])
 
-        camera = tf.reshape(camera, [-1, 1, 3], name="cam_adj_shape")
+        camera = tf.reshape(camera, [-1, 1, 3], name="cam_adj_shape") # N x 1 x 3
 
-        X_trans = X[:, :, :2] + camera[:, :, 1:]
+        X_trans = X[:, :, :2] + camera[:, :, 1:] # N x 19 x 2，broadcasting: cam => N x 19 x 2
 
         shape = tf.shape(X_trans)
         return tf.reshape(
