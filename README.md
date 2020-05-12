@@ -28,6 +28,7 @@ Small checks before training:
 ## Evaluation
 
 ## Architecture
+(Pictures of the network architecture will be released 06/30)
 
 ## Result
 
