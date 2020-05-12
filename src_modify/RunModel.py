@@ -99,15 +99,12 @@ class RunModel(object):
             if i == 0:
                 delta_theta, _ = threed_enc_fn(
                     state,
+                    initial_state=theta_prev,
                     num_output=self.total_params,
-                    is_training=False,
-                    reuse=False)
+                    reuse=None)
             else:
                 delta_theta, _ = threed_enc_fn(
-                    state,
-                    num_output=self.total_params,
-                    is_training=False,
-                    reuse=True)
+                    state, initial_state=theta_prev, num_output=self.total_params, reuse=True)
 
             # Compute new theta
             theta_here = theta_prev + delta_theta
