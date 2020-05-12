@@ -19,7 +19,7 @@ import json
 
 import numpy as np
 
-# curr_path = '/content/hmr/src/'
+# curr_path = '/content/drive/My Drive/'
 base_dir = osp.abspath(".")
 model_dir = osp.join(base_dir, 'models')
 # if not osp.exists(model_dir):
