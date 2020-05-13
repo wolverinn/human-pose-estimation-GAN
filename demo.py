@@ -134,9 +134,9 @@ def main(img_path, json_path=None):
     start = time.time()
     joints, verts, cams, joints3d, theta = model.predict(
         input_img, get_theta=True)
+    print("TIME COST:", time.time() - start)
 
     visualize(img, proc_param, joints[0], verts[0], cams[0])
-    print("TIME COST:", time.time() - start)
 
 
 if __name__ == '__main__':

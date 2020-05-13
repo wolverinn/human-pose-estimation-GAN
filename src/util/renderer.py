@@ -219,7 +219,7 @@ def render_model(verts,
     if color_id is None:
         color = colors['light_blue']
     else:
-        color_list = colors.values()
+        color_list = list(colors.values())
         color = color_list[color_id % len(color_list)]
 
     imtmp = simple_renderer(rn, verts, faces, color=color)
@@ -291,20 +291,35 @@ def draw_skeleton(input_image, joints, draw_edges=True, vis=None, radius=None):
     if radius is None:
         radius = max(4, (np.mean(input_image.shape[:2]) * 0.01).astype(int))
 
+    # colors = {
+    #     'pink': np.array([197, 27, 125]),  # L lower leg
+    #     'light_pink': np.array([233, 163, 201]),  # L upper leg
+    #     'light_green': np.array([161, 215, 106]),  # L lower arm
+    #     'green': np.array([77, 146, 33]),  # L upper arm
+    #     'red': np.array([215, 48, 39]),  # head
+    #     'light_red': np.array([252, 146, 114]),  # head
+    #     'light_orange': np.array([252, 141, 89]),  # chest
+    #     'purple': np.array([118, 42, 131]),  # R lower leg
+    #     'light_purple': np.array([175, 141, 195]),  # R upper
+    #     'light_blue': np.array([145, 191, 219]),  # R lower arm
+    #     'blue': np.array([69, 117, 180]),  # R upper arm
+    #     'gray': np.array([130, 130, 130]),  #
+    #     'white': np.array([255, 255, 255]),  #
+    # }
     colors = {
-        'pink': np.array([197, 27, 125]),  # L lower leg
-        'light_pink': np.array([233, 163, 201]),  # L upper leg
-        'light_green': np.array([161, 215, 106]),  # L lower arm
-        'green': np.array([77, 146, 33]),  # L upper arm
-        'red': np.array([215, 48, 39]),  # head
-        'light_red': np.array([252, 146, 114]),  # head
-        'light_orange': np.array([252, 141, 89]),  # chest
-        'purple': np.array([118, 42, 131]),  # R lower leg
-        'light_purple': np.array([175, 141, 195]),  # R upper
-        'light_blue': np.array([145, 191, 219]),  # R lower arm
-        'blue': np.array([69, 117, 180]),  # R upper arm
-        'gray': np.array([130, 130, 130]),  #
-        'white': np.array([255, 255, 255]),  #
+        'pink': tuple([197, 27, 125]),  # L lower leg
+        'light_pink': tuple([233, 163, 201]),  # L upper leg
+        'light_green': tuple([161, 215, 106]),  # L lower arm
+        'green': tuple([77, 146, 33]),  # L upper arm
+        'red': tuple([215, 48, 39]),  # head
+        'light_red': tuple([252, 146, 114]),  # head
+        'light_orange': tuple([252, 141, 89]),  # chest
+        'purple': tuple([118, 42, 131]),  # R lower leg
+        'light_purple': tuple([175, 141, 195]),  # R upper
+        'light_blue': tuple([145, 191, 219]),  # R lower arm
+        'blue': tuple([69, 117, 180]),  # R upper arm
+        'gray': tuple([130, 130, 130]),  #
+        'white': tuple([255, 255, 255]),  #
     }
 
     image = input_image.copy()
@@ -387,7 +402,7 @@ def draw_skeleton(input_image, joints, draw_edges=True, vis=None, radius=None):
         import ipdb
         ipdb.set_trace()
 
-    for child in xrange(len(parents)):
+    for child in range(len(parents)):
         point = joints[:, child]
         # If invisible skip
         if vis is not None and vis[child] == 0:

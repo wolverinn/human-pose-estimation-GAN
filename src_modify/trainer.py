@@ -150,7 +150,7 @@ class HMRTrainer(object):
 
             init_fn = load_pretrain
 
-        self.saver = tf.train.Saver(keep_checkpoint_every_n_hours=18)
+        self.saver = tf.train.Saver(keep_checkpoint_every_n_hours=2)
         self.summary_writer = tf.summary.FileWriter(self.model_dir)
         self.sv = tf.train.Supervisor(
             logdir=self.model_dir,

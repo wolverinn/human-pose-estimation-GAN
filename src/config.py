@@ -35,8 +35,6 @@ RESNET_PATH = osp.join(base_dir, 'models/resnet_v2_50/resnet_v2_50.ckpt')
 
 # 从之前保存的地方继续训练
 MODEL_LOG_PATH = None
-if len(os.listdir(osp.join(base_dir, 'logs/'))) > 0:
-    MODEL_LOG_PATH = os.listdir(osp.join(base_dir, 'logs/'))[0]
 
 flags.DEFINE_string('smpl_model_path', SMPL_MODEL_PATH,
                     'path to the neurtral smpl model')
