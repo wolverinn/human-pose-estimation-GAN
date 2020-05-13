@@ -191,7 +191,7 @@ def get_encoder_fn_separate(model_type):
         exit(1)
 
     if 'fc3_dropout' in model_type:
-        threed_fn = Encoder_gru_dropout
+        threed_fn = Encoder_fc3_dropout
 
     if encoder_fn is None or threed_fn is None:
         print('Dont know what encoder to use for %s' % model_type)

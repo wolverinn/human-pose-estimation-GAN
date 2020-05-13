@@ -47,7 +47,7 @@ flags.DEFINE_string('load_path', MODEL_LOG_PATH, 'path to trained model')
 # flags.DEFINE_string('load_path', osp.join(base_dir, 'logs/HMR_3DSUP_resnet_fc3_dropout_Elr1e-05_kp-weight60_Dlr1e-04_3dsup-weight60_Apr07_1249'), 'path to trained model')
 flags.DEFINE_string('pretrained_model_path', RESNET_PATH,
                     'if not None, fine-tunes from this ckpt')
-flags.DEFINE_integer('batch_size', 4,
+flags.DEFINE_integer('batch_size', 8,
                      'Input image size to the network after preprocessing')
 
 # Don't change if testing:
@@ -69,7 +69,7 @@ flags.DEFINE_string('data_dir', DATA_DIR, 'tf_records dir')
 flags.DEFINE_string('logs_dir', osp.join(base_dir, 'logs/'), 'Where to save training models')
 flags.DEFINE_string('model_dir', osp.join(base_dir, 'logs/'), 'Where model will be saved -- filled automatically')
 flags.DEFINE_integer('log_img_step', 1000, 'How often to visualize img during training')
-flags.DEFINE_integer('epoch', 75, '# of epochs to train')
+flags.DEFINE_integer('epoch', 55, '# of epochs to train')
 
 flags.DEFINE_list('datasets', ['lsp', 'lsp_ext', 'mpii', 'coco', 'mpi_inf_3dhp'],
                           'datasets to use for training')
