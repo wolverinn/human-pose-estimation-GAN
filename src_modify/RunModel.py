@@ -96,15 +96,24 @@ class RunModel(object):
             # ---- Compute outputs
             state = tf.concat([self.img_feat, theta_prev], 1)
 
+            # if i == 0:
+            #     delta_theta, _ = threed_enc_fn(
+            #         state,
+            #         initial_state=theta_prev,
+            #         num_output=self.total_params,
+            #         reuse=None)
+            # else:
+            #     delta_theta, _ = threed_enc_fn(
+            #         state, initial_state=theta_prev, num_output=self.total_params, reuse=True)
             if i == 0:
-                delta_theta, _ = threed_enc_fn(
+                delta_theta, threeD_var = threed_enc_fn(
                     state,
-                    initial_state=theta_prev,
                     num_output=self.total_params,
-                    reuse=None)
+                    reuse=False)
+                self.E_var.extend(threeD_var)
             else:
                 delta_theta, _ = threed_enc_fn(
-                    state, initial_state=theta_prev, num_output=self.total_params, reuse=True)
+                    state, num_output=self.total_params, reuse=True)
 
             # Compute new theta
             theta_here = theta_prev + delta_theta
