@@ -33,9 +33,10 @@ Small checks before training:
 ## Result
 
 ## Reference
-- https://zhuanlan.zhihu.com/p/85506259
-- https://zhuanlan.zhihu.com/p/113024569
-- https://ibz.bz/2019/05/04/729843.html
-- https://mp.weixin.qq.com/s/RdxmOi75glQBKMhKD-APNg
-- https://paperswithcode.com/task/3d-human-pose-estimation
-- https://github.com/cbsudux/awesome-human-pose-estimation
+- [人体姿态估计的过去，现在，未来 - 知乎](https://zhuanlan.zhihu.com/p/85506259)
+- [3D人体姿态估计笔记 - 知乎](https://zhuanlan.zhihu.com/p/113024569)
+- [基于深度学习的3D pose estimation总结](https://ibz.bz/2019/05/04/729843.html)
+- [人体模型介绍 - SMPL](https://mp.weixin.qq.com/s/RdxmOi75glQBKMhKD-APNg)
+- [Paper with code](https://paperswithcode.com/task/3d-human-pose-estimation)
+- [awesome human pose estimation - GitHub](https://github.com/cbsudux/awesome-human-pose-estimation)
+- [配置opendr问题 ](https://www.jianshu.com/p/1b965fee1a35)
