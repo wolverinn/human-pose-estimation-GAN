@@ -7,7 +7,7 @@ This work is very much like [hmr](https://github.com/akanazawa/hmr)/[vibe](https
 - Overall network architecture: Encoder + Regressor + Discriminator
 - Loss function: 2D reprojection loss + SMPL parameter loss + 3D keypoints loss + discriminator loss
 - Dataset: 2D annotated data + 3D annotated data + unpaired data (for GAN)
-- Source code: mostly borrowed from hmr except the network architecture
+- Source code: data processing by hmr
 
 The different part of this work:
 
@@ -28,7 +28,6 @@ Small checks before training:
 - Check ```start.bash``` to start training !
 
 ## Architecture
-(Pictures of the network architecture will be released 06/30)
 
 ## Result
 
