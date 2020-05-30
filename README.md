@@ -38,4 +38,5 @@ Small checks before training:
 - [人体模型介绍 - SMPL](https://mp.weixin.qq.com/s/RdxmOi75glQBKMhKD-APNg)
 - [Paper with code](https://paperswithcode.com/task/3d-human-pose-estimation)
 - [awesome human pose estimation - GitHub](https://github.com/cbsudux/awesome-human-pose-estimation)
+- [弱透视投影 - CSDN](https://blog.csdn.net/LoseInVain/article/details/102698703)
 - [配置opendr问题 ](https://www.jianshu.com/p/1b965fee1a35)
